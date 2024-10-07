@@ -18,7 +18,7 @@ public class Main {
         }
         if (sq == (int) sq) {
             System.out.print(" ");
-            System.out.print(sq);
+            System.out.print((int)sq);
         }
         while (!s.isEmpty()) {
             System.out.print(" ");
