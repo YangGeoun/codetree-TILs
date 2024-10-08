@@ -8,24 +8,25 @@ public class Main {
         String[] line = br.readLine().split(" ");
         int n = Integer.parseInt(line[0]);
         int m = Integer.parseInt(line[1]);
+        int flag,i,j;
         int[] arr = new int[n];
         line = br.readLine().split(" ");
-        for (int i = 0; i < n; i++) {
-            arr[i] = Integer.parseInt(line[i]);
+        for (int k = 0; k < n; k++) {
+            arr[k] = Integer.parseInt(line[k]);
         }
         for (int a = 0; a < m; a++) {
             line = br.readLine().split(" ");
-            int flag = Integer.parseInt(line[0]);
-            int i = Integer.parseInt(line[1]);
-            int j = Integer.parseInt(line[2]);
+            flag = Integer.parseInt(line[0]);
+            i = Integer.parseInt(line[1]);
+            j = Integer.parseInt(line[2]);
             if (flag == 1) arr = method1(arr, i, j);
             else if (flag == 2) arr = method2(arr, i, j);
             else if (flag == 3) arr = method3(arr, i, j);
             else arr = method4(arr, i, j);
         
         }
-        for (int i = 0; i < n; i++) {
-            System.out.print(arr[i]);
+        for (int k = 0; k < n; k++) {
+            System.out.print(arr[k]);
             System.out.print(" ");
         }
     }
