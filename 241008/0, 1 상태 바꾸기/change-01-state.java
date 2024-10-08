@@ -19,10 +19,10 @@ public class Main {
             flag = Integer.parseInt(line[0]);
             i = Integer.parseInt(line[1]);
             j = Integer.parseInt(line[2]);
-            if (flag == 1) arr = method1(arr, i, j);
-            else if (flag == 2) arr = method2(arr, i, j);
-            else if (flag == 3) arr = method3(arr, i, j);
-            else arr = method4(arr, i, j);
+            if (flag == 1) method1(arr, i, j);
+            else if (flag == 2) method2(arr, i, j);
+            else if (flag == 3) method3(arr, i, j);
+            else method4(arr, i, j);
         
         }
         for (int k = 0; k < n; k++) {
@@ -31,29 +31,25 @@ public class Main {
         }
     }
 
-    static int[] method1(int[] arr, int i, int x) {
+    static void method1(int[] arr, int i, int x) {
         arr[i - 1] = x;
-        return arr;
     }
 
-    static int[] method2(int[] arr, int i, int j) {
+    static void method2(int[] arr, int i, int j) {
         for (int a = i - 1; a < j; a++) {
             arr[a] = (arr[a] == 0) ? 1 : 0;
         }
-        return arr;
     }
 
-    static int[] method3(int[] arr, int i, int j) {
+    static void method3(int[] arr, int i, int j) {
         for (int a = i - 1; a < j; a++) {
             arr[a] = 0;
         }
-        return arr;
     }
 
-    static int[] method4(int[] arr, int i, int j) {
+    static void method4(int[] arr, int i, int j) {
         for (int a = i - 1; a < j; a++) {
             arr[a] = 1;
         }
-        return arr;
     }
 }
