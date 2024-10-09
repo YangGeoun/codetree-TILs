@@ -23,13 +23,18 @@ public class Main {
                 map[i][j] = Integer.parseInt(line[j]);
             }
         }
+
+        int d, p;
         for (int i = 0; i < m; i++) {
             line = br.readLine().split(" ");
-            moveSupplements(before, after, 1, 3, n);
+            d = Integer.parseInt(line[0]);
+            p = Integer.parseInt(line[1]);
+            moveSupplements(before, after, d, p, n);
             giveSupplements(map, after, n);
             cutTree(before, after, map, n);
         }
         System.out.println(countTree(map, n));
+
         
     }
 
@@ -56,6 +61,13 @@ public class Main {
         for (int i = 0; i < n ; i++) {
             for(int j = 0; j < n ; j++) {
                 if (after[i][j]) {
+                    map[i][j]++; 
+                }
+            }
+        }
+        for (int i = 0; i < n ; i++) {
+            for(int j = 0; j < n ; j++) {
+                if (after[i][j]) {
                     count = 0;
                     for(int d = 0; d < 4; d++) {
                         newI = i + direction2[d][0];
@@ -66,7 +78,7 @@ public class Main {
                             } 
                         }
                     }
-                    map[i][j] += count + 1; 
+                    map[i][j] += count; 
                 }
             }
         }
