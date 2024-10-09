@@ -23,18 +23,19 @@ public class Main {
                 map[i][j] = Integer.parseInt(line[j]);
             }
         }
-        System.out.println(Arrays.deepToString(before));
-        moveSupplements(before, after, 2, 4, n);
-        giveSupplements(map,after,n);
-        System.out.println(Arrays.deepToString(after));
-        
-
+        for (int i = 0; i < m; i++) {
+            line = br.readLine().split(" ");
+            moveSupplements(before, after, 1, 3, n);
+            giveSupplements(map, after, n);
+            cutTree(before, after, map, n);
+        }
+        System.out.println(countTree(map, n));
         
     }
 
     // 영양제 이동 메소드 (after는 비어있고, before는 새로운 영양제로 초기화된 상태에서)
     // before는 after채워 넣을 때 빈배열로 초기화
-    // after는 나무에 영양제 주입할때 초기화
+    // after는 나무 잘라낼때 초기화(영양제를 준 나무 제외하서 그때까지 필요)
     static void moveSupplements(boolean[][] before, boolean[][] after, int d, int p, int n){
         int newI, newJ;
         for (int i = 0; i < n ; i++) {
@@ -49,17 +50,16 @@ public class Main {
         }
     }
     
-    // 영양제 넣는 메소드
+    // 영양제 주어 성장하는 메소드
     static void giveSupplements(int[][] map, boolean[][] after, int n){
         int count, newI, newJ;
         for (int i = 0; i < n ; i++) {
             for(int j = 0; j < n ; j++) {
                 if (after[i][j]) {
-                    after[i][j] = false;
                     count = 0;
                     for(int d = 0; d < 4; d++) {
-                        newI = i + direction2[d];
-                        newJ = j + direction2[d];
+                        newI = i + direction2[d][0];
+                        newJ = j + direction2[d][1];
                         if (0 <= newI && newI < n && 0 <= newJ && newJ < n){
                             if(map[newI][newJ] > 0){
                                 count++;
@@ -71,8 +71,27 @@ public class Main {
             }
         }
     }
-    // 영양제 받아 성장하는 메소드
 
-
-    // 잘라내서 영양제 추가하는 메소드
+    // 나무 잘라내서 영양제 추가하는 메소드
+    static void cutTree(boolean[][] before, boolean[][] after, int[][] map, int n){
+        for (int i = 0; i < n ; i++) {
+            for(int j = 0; j < n ; j++) {
+                if (!after[i][j]){
+                    if (map[i][j] > 1) {
+                        map[i][j] -= 2;
+                        before[i][j] = true;
+                    }
+                } else after[i][j] = false;
+            }
+        }
+    }
+    static int countTree(int[][] map, int n){
+        int count = 0;
+        for (int i = 0; i < n ; i++) {
+            for(int j = 0; j < n ; j++) {
+                count += map[i][j];
+            }
+        }
+        return count;
+    }
 }
