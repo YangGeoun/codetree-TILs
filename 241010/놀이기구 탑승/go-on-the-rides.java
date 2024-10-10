@@ -23,9 +23,10 @@ public class Main {
             Student s = new Student(num, tmp);
             studentList.add(s);
         }
-        for (Student s : studentList) {
-            s.position();
-        }
+        // for (Student s : studentList) {
+        //     s.position();
+        // }
+        studentList.stream().forEach(Student::position);
         // System.out.println(Arrays.deepToString(map));
         int totalPoint = studentList.stream().mapToInt(Student::checkPoint).sum();
         System.out.println(totalPoint);
