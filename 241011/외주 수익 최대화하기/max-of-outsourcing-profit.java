@@ -30,8 +30,8 @@ public class Main {
                 checked[i] = true;
                 solve(index + works[i][0], timeSum + works[i][0], moneySum + works[i][1]);
                 checked[i] = false;
+                timeSum++;
             }
-            timeSum++;
         }
     }
 }
