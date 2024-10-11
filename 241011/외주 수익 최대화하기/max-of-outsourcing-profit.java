@@ -17,21 +17,18 @@ public class Main {
             works[i][0] = Integer.parseInt(line[0]);
             works[i][1] = Integer.parseInt(line[1]);
         }
-        solve(0,0,0);
+        solve(0,0);
         System.out.println(maxMoney);
         
     }
-    static void solve(int index, int timeSum, int moneySum){
-        if (index > n) return;
-        if (timeSum > n) return;
-        if (maxMoney < moneySum) maxMoney = moneySum;
-        for (int i = index; i < n; i++) {
-            if (!checked[i]){
-                checked[i] = true;
-                solve(index + works[i][0], timeSum + works[i][0], moneySum + works[i][1]);
-                checked[i] = false;
-                timeSum++;
-            }
+     static void solve(int index, int moneySum) {
+        if (index >= n) {
+            maxMoney = Math.max(maxMoney, moneySum);
+            return;
+        }
+        solve(index + 1, moneySum);
+        if (index + works[index][0] <= n) {
+            solve(index + works[index][0], moneySum + works[index][1]);
         }
     }
 }
