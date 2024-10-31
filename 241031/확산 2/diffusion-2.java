@@ -18,15 +18,14 @@ public class Main {
     public static void main(String[] args) throws IOException {
         // 여기에 코드를 작성해주세요.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] line;
-        line = br.readLine().split(" ");
-        n = Integer.parseInt(line[0]);
-        m = Integer.parseInt(line[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
         matrix = new int[n][m];
         for(int i = 0; i < n; i++) {
-            line = br.readLine().split(" ");
+            st = new StringTokenizer(br.readLine());
             for(int j = 0; j < m; j++){
-                int num = Integer.parseInt(line[j]);
+                int num = Integer.parseInt(st.nextToken());
                 if(num == 1) {
                     q.add(new Point(i, j));
                 } else if (num == 0) numOfZero++;
