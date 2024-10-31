@@ -36,6 +36,7 @@ public class Main {
         System.out.println(bfs());
     }
     static int bfs() {
+        if (numOfZero == 0) return 0;
         int answer = 0;
         int cnt = 0;
         while(!q.isEmpty()){
