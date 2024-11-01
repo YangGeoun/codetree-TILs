@@ -3,26 +3,16 @@ import java.util.*;
 
 public class Main {
     static class Info implements Comparable<Info> {
-        boolean isA; // true: 시작점, false: 끝점
-        int num;
+        int x1, x2;
 
-        Info(boolean isA, int num) {
-            this.isA = isA;
-            this.num = num;
+        Info(int x1, int x2) {
+            this.x1 = x1;
+            this.x2 = x2;
         }
 
         @Override
         public int compareTo(Info o) {
-            // num 기준으로 정렬, 같으면 시작점이 먼저 오도록
-            if (this.num == o.num) {
-                return this.isA ? -1 : 1; // 시작점이 끝점보다 우선
-            }
-            return this.num - o.num;
-        }
-
-        @Override
-        public String toString() {
-            return "{isA : " + isA + ", num : " + num + "}";
+            return this.x2 - o.x2;
         }
     }
 
@@ -35,23 +25,26 @@ public class Main {
         PriorityQueue<Info> pq = new PriorityQueue<>();
         for (int i = 0; i < K; i++) {
             line = br.readLine().split(" ");
-            pq.add(new Info(true, Integer.parseInt(line[0]))); // 시작점 추가
-            pq.add(new Info(false, Integer.parseInt(line[1]))); // 끝점 추가
+            int x1 = Integer.parseInt(line[0]);
+            int x2 = Integer.parseInt(line[1]);
+            if (x2 < x1) {
+                int tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+            }
+            pq.add(new Info(x1, x2));
         }
         
-        int currentCount = 0; // 현재 열려있는 구간의 개수
-        int maxCount = 0; // 최대 열려있는 구간의 개수
-        
+        int lastx = 0;
+        int count = 1;
         while (!pq.isEmpty()) {
-            Info now = pq.poll();
-            if (now.isA) { // 시작점일 경우
-                currentCount++;
-                maxCount = Math.max(maxCount, currentCount);
-            } else { // 끝점일 경우
-                currentCount--;
+            Info current = pq.poll();
+            if (current.x1 >= lastx) {
+                count++;
+                lastx = current.x2;
             }
         }
-        
-        System.out.println(maxCount + 1);
+
+        System.out.println(count);
     }
 }
