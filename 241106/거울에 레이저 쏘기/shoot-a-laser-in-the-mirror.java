@@ -44,33 +44,29 @@ public class Main {
         int cnt = 0;
         int nowR = startR;
         int nowC = startC;
-        while (0 <= nowR && nowR < n && 0 <= nowC && nowC < m) {
-            if (matrix[nowR][nowC]) {
-                switch(direction){
-                    case 0 : direction = 1;
-                        break;
-                    case 1 : direction = 0;
-                        break;
-                    case 2 : direction = 3;
-                        break;
-                    case 3 : direction = 2;
-                        break;
+        try {
+            while (true) {
+                if (matrix[nowR][nowC]) {
+                    switch(direction) {
+                        case 0: direction = 1; break;
+                        case 1: direction = 0; break;
+                        case 2: direction = 3; break;
+                        case 3: direction = 2; break;
+                    }
+                } else {
+                    switch(direction) {
+                        case 0: direction = 3; break;
+                        case 1: direction = 2; break;
+                        case 2: direction = 1; break;
+                        case 3: direction = 0; break;
+                    }
                 }
-            } else {
-                switch(direction){
-                    case 0 : direction = 3;
-                        break;
-                    case 1 : direction = 2;
-                        break;
-                    case 2 : direction = 1;
-                        break;
-                    case 3 : direction = 0;
-                        break;
-                }
+                nowR += dr[direction];
+                nowC += dc[direction];
+                cnt++;
             }
-            nowR = nowR + dr[direction];
-            nowC = nowC + dc[direction];
-            cnt++;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            // 배열 범위를 벗어나면 루프 종료
         }
         return cnt;
     }
