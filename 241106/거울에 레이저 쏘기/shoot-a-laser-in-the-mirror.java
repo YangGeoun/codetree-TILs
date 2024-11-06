@@ -28,12 +28,12 @@ public class Main {
         }
         int maxReflection = 0;
         for (int i = 0; i < n; i++) {
-            maxReflection = Math.max(maxReflection, howManyReflection(i,m,1));
+            maxReflection = Math.max(maxReflection, howManyReflection(i,m - 1,1));
             maxReflection = Math.max(maxReflection, howManyReflection(i,0,3));
         }
         for (int i = 0; i < m; i++) {
             maxReflection = Math.max(maxReflection, howManyReflection(0,i,0));
-            maxReflection = Math.max(maxReflection, howManyReflection(n,i,2));
+            maxReflection = Math.max(maxReflection, howManyReflection(n - 1,i,2));
         }
         System.out.println(maxReflection);
     }
