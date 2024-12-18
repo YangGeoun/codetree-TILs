@@ -13,7 +13,7 @@ public class Main {
         line = br.readLine().split(" ");
         int ldr = Integer.parseInt(line[0]);
         float mbr = Integer.parseInt(line[1]);
-        int answer = 0;
+        long answer = 0;
         for (int i = 0; i < N; i++) {
             int num = restaurantList[i];
             if (num <= ldr) answer++;
