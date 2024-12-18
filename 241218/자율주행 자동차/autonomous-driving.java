@@ -23,12 +23,12 @@ public class Main {
         int answer = 0;
         while(true) {
             boolean flag = true;
+            matrix[r][c] = 2;
             for (int i = 1; i < 5; i++) {
                 int newD = (d + 3 * i) % 4;
                 int newR = r + dr[newD];
                 int newC = c + dc[newD];
                 if (matrix[newR][newC] == 0) {
-                    matrix[r][c] = 2;
                     r = newR;
                     c = newC;
                     d = newD;
@@ -40,11 +40,12 @@ public class Main {
                 int newR = r + dr[(d + 2) % 4];
                 int newC = c + dc[(d + 2) % 4];
                 if (matrix[newR][newC] == 1) break;
-                matrix[r][c] = 2;
                 r = newR;
                 c = newC;
             }
         }
+        
+        matrix[r][c] = 2;
         for (int i = 0; i < n; i++) {
             for(int j = 0; j < m; j++) {
                 if (matrix[i][j] == 2) answer++;
