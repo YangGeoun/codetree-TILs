@@ -30,6 +30,7 @@ public class Main {
                 int newC = now.c + dc[d];
                 if(0 <= newR && newR < n && 0 <= newC && newC < n) {
                     int diff = Math.abs(matrix[now.r][now.c] - matrix[newR][newC]);
+                    
                     if (L <= diff && diff <= R) {
                         if (visited[newR][newC] == 0) {
                             Position tmp = new Position(newR, newC);
@@ -82,7 +83,7 @@ public class Main {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     if (copy[i][j] != matrix[i][j]){
-                        flag = true;
+                        flag = false;
                     }
                 }
             }
