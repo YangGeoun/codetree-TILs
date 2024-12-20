@@ -1,0 +1,69 @@
+import java.util.*;
+import java.io.*;
+
+// bds탐색의 모든 경우의 수 같지 않을까? (메모리는 조금 더 적게 쓰지만 오래 걸리는)
+public class Main {
+    static int n, m;
+    static int[] dr = {-1, 0, 1, 0};
+    static int[] dc = {0, 1, 0, -1};
+    static int[][] matrix;
+    static boolean[][] visited;
+
+    static class Position {
+        int r, c, d, sum, num;
+        public Position(int r, int c, int d, int sum, int num) {
+            this.r = r;
+            this.c = c;
+            this.d = d;
+            this.sum = sum;
+            this.num = num;
+        }
+    }
+
+    // bfs를 사용해서 해당칸의 최댓값을 찾는 함수
+    static int getMax(int r, int c) {
+        Queue<Position> q = new LinkedList<>();
+        q.add(new Position(r, c, 5, matrix[r][c], 1));
+        int max = 0;
+        while (!q.isEmpty()) {
+            Position now = q.poll();
+            for (int d = 0; d < 4; d++) {
+                if (now.d == ((d + 2) % 4)) continue;
+                int newR = now.r + dr[d];
+                int newC = now.c + dc[d];
+                if (0 <= newR && newR < n && 0 <= newC && newC < m && !(newR == r && newC == c)) {
+                    if (now.num < 3) {
+                        q.add(new Position(newR, newC, d , (now.sum + matrix[newR][newC]), now.num + 1));
+                    } else if (now.num == 3) {
+                        max = Math.max(max, now.sum + matrix[newR][newC]);
+                        
+                    }
+                }
+            }
+        }
+        return max;
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        matrix = new int[n][m];
+        for(int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for(int j = 0; j < m; j++) {
+                matrix[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+        int answer = 0;
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                answer = Math.max(answer, getMax(i, j));
+            }
+        }
+        System.out.println(answer);
+
+    }
+}
