@@ -20,7 +20,7 @@ public class Main {
         }
     }
 
-    // bfs를 사용해서 해당칸의 최댓값을 찾는 함수
+    // bfs를 사용해서 해당칸의 최댓값을 찾는 함수 **(ㅗ 모양 표현 못함)**
     static int getMax(int r, int c) {
         Queue<Position> q = new LinkedList<>();
         q.add(new Position(r, c, 5, matrix[r][c], 1));
@@ -39,6 +39,47 @@ public class Main {
                         
                     }
                 }
+            }
+        }
+        return max;
+    }
+    
+    static int checkT() {
+        int max = 0;
+        for(int i = 0; i < n - 2; i++) {
+            for(int j = 0; j < m - 1; j++) {
+                int sum = matrix[i][j];
+                sum += matrix[i + 1][j];
+                sum += matrix[i + 2][j];
+                sum += matrix[i + 1][j + 1];
+                max = Math.max(max, sum);
+            }
+        }
+        for(int i = 0; i < n - 2; i++) {
+            for(int j = 1; j < m; j++) {
+                int sum = matrix[i][j];
+                sum += matrix[i + 1][j];
+                sum += matrix[i + 2][j];
+                sum += matrix[i + 1][j - 1];
+                max = Math.max(max, sum);
+            }
+        }
+        for(int i = 0; i < n - 1; i++) {
+            for(int j = 0; j < m - 2; j++) {
+                int sum = matrix[i][j];
+                sum += matrix[i][j + 1];
+                sum += matrix[i][j + 2];
+                sum += matrix[i + 1][j + 1];
+                max = Math.max(max, sum);
+            }
+        }
+        for(int i = 1; i < n - 1; i++) {
+            for(int j = 0; j < m - 2; j++) {
+                int sum = matrix[i][j];
+                sum += matrix[i][j + 1];
+                sum += matrix[i][j + 2];
+                sum += matrix[i - 1][j + 1];
+                max = Math.max(max, sum);
             }
         }
         return max;
@@ -63,6 +104,7 @@ public class Main {
                 answer = Math.max(answer, getMax(i, j));
             }
         }
+        answer = Math.max(answer, checkT());
         System.out.println(answer);
 
     }
