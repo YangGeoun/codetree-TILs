@@ -31,7 +31,7 @@ public class Main {
                 if (now.d == ((d + 2) % 4)) continue;
                 int newR = now.r + dr[d];
                 int newC = now.c + dc[d];
-                if (0 <= newR && newR < n && 0 <= newC && newC < m && !(newR == r && newC == c)) {
+                if (0 <= newR && newR < n && 0 <= newC && newC < m) {
                     if (now.num < 3) {
                         q.add(new Position(newR, newC, d , (now.sum + matrix[newR][newC]), now.num + 1));
                     } else if (now.num == 3) {
