@@ -82,6 +82,10 @@ public class Main {
         }
         selectedArr = new boolean[hospitalPositionList.size()];
         makeSelectedArr(0, 0);
-        System.out.println(minValue);
+        if (minValue == Integer.MAX_VALUE){
+            System.out.println(-1);
+        } else {
+            System.out.println(minValue);
+        }
     }
 }
