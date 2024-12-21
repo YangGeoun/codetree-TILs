@@ -1,92 +1,145 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.*;
+
 import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int n, m, cnt, minValue = Integer.MAX_VALUE;
-    static int[] dr = {-1, 1, 0, 0};
-    static int[] dc = {0, 0, -1, 1};
-    static int[][] matrix;
-    static boolean[] selectedArr;
-    static List<Position> hospitalPositionList;
 
-    static class Position {
-        int r, c;
+	static int[] dx = { -1, 0, 1, 0 };
+	static int[] dy = { 0, 1, 0, -1 };
+	static int n, m;
+	static int[][] arr;
+	static ArrayList<Hospital> hospitals = new ArrayList<>();
+	static int emptySpaces = 0;
+	static int minTime = Integer.MAX_VALUE;
 
-        public Position (int r, int c) {
-            this.r = r;
-            this.c = c;
-        }
-    }
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		String[] input = br.readLine().split(" ");
+		n = Integer.parseInt(input[0]);
+		m = Integer.parseInt(input[1]);
 
-    static void makeSelectedArr(int index, int count) {
-        if (count == m) {
-            minValue = Math.min(minValue, bfs());
-            return;
-        }
-        if (index == selectedArr.length) return;
-        selectedArr[index] = true;
-        makeSelectedArr(index + 1, count + 1);
-        selectedArr[index] = false;
-        makeSelectedArr(index + 1, count);
-    }
+		arr = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			String[] row = br.readLine().split(" ");
+			for (int j = 0; j < n; j++) {
+				arr[i][j] = Integer.parseInt(row[j]);
+				if (arr[i][j] == 2) {
+					hospitals.add(new Hospital(i, j));
+				}
+				if (arr[i][j] == 0) {
+					emptySpaces++;
+				}
+			}
+		}
 
-    static int bfs() {
-        Queue<Position> q = new LinkedList<>();
-        int[][] visited = new int[n][n];
-        for (int i = 0; i < selectedArr.length; i++) {
-            if (selectedArr[i]) {
-                Position start = hospitalPositionList.get(i);
-                q.add(start);
-                visited[start.r][start.c] = 1;
-            }
-        }
-        int count = 0;
-        int maxVisited = 1;
-        while (!q.isEmpty()) {
-            if (count >= cnt) break;
-            Position now = q.poll();
-            for (int d = 0; d < 4; d++) {
-                int newR = now.r + dr[d];
-                int newC = now.c + dc[d];
-                if(0 <= newR && newR < n && 0 <= newC && newC < n) {
-                    if (matrix[newR][newC] != 1 && visited[newR][newC] == 0) {
-                        q.add(new Position(newR, newC));
-                        int nextVisited = visited[now.r][now.c] + 1;
-                        visited[newR][newC] = nextVisited;
-                        maxVisited = nextVisited;
-                        if (matrix[newR][newC] == 0) count++;
-                    }
-                }
-            }
-        }
-        if (count != cnt) return Integer.MAX_VALUE;
-        return maxVisited - 1;
-    } 
+		if (emptySpaces == 0) {
+			System.out.println(0); // 빈 공간이 없으면 바로 종료
+			return;
+		}
 
-    // 모든 병원에서 bfs이후 최소로 업데이트
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] splitedInput = br.readLine().split(" ");
-        n = Integer.parseInt(splitedInput[0]);
-        m = Integer.parseInt(splitedInput[1]);
-        hospitalPositionList = new ArrayList<>();
-        matrix = new int[n][n];
-        cnt = 0;
-        for (int i = 0; i < n; i++) {
-            splitedInput = br.readLine().split(" ");
-            for (int j = 0; j < n; j++) {
-                int tmp = Integer.parseInt(splitedInput[j]);
-                matrix[i][j] = tmp;
-                if(tmp == 2) hospitalPositionList.add(new Position(i, j));
-                if(tmp == 0) cnt++;
-            }
-        }
-        selectedArr = new boolean[hospitalPositionList.size()];
-        makeSelectedArr(0, 0);
-        if (minValue == Integer.MAX_VALUE){
-            System.out.println(-1);
-        } else {
-            System.out.println(minValue);
-        }
-    }
+		selectHospitals(0, 0, new ArrayList<>());
+
+		if (minTime == Integer.MAX_VALUE) {
+			System.out.println(-1);
+		} else {
+			System.out.println(minTime);
+		}
+	}
+
+	// M개의 병원 선택
+	public static void selectHospitals(int index, int selectedCount, List<Hospital> selectedHospitals) {
+		if (selectedCount == m) {
+			bfs(selectedHospitals);
+			return;
+		}
+
+		for (int i = index; i < hospitals.size(); i++) {
+			selectedHospitals.add(hospitals.get(i));
+			selectHospitals(i + 1, selectedCount + 1, selectedHospitals);
+			selectedHospitals.remove(selectedHospitals.size() - 1);
+		}
+	}
+
+	// BFS로 바이러스 전파
+	public static void bfs(List<Hospital> selectedHospitals) {
+		PriorityQueue<Node> queue = new PriorityQueue<>((o1,o2)-> {
+			return o1.time - o2.time;
+		});
+		boolean[][] visited = new boolean[n][n];
+		int[][] time = new int[n][n];
+
+		// 병원 좌표를 큐에 넣고 방문 처리
+		for (Hospital hospital : selectedHospitals) {
+			queue.add(new Node(hospital.x, hospital.y, 0,true));
+			visited[hospital.x][hospital.y] = true;
+		}
+
+		int maxTime = 0;
+		int spacesToFill = emptySpaces;
+
+		// BFS 탐색 시작
+		while (!queue.isEmpty()) {
+			Node node = queue.poll();
+		if(spacesToFill == 0) {
+			break;
+		}
+			// 현재 칸이 빈 칸이면 빈 칸 수를 줄임
+			if (arr[node.x][node.y] == 0) {
+				spacesToFill--;
+			}
+			if (maxTime < node.time) {
+				maxTime = node.time; // 가장 마지막에 도달한 시간을 갱신
+				
+			}
+			for (int i = 0; i < 4; i++) {
+				int nx = node.x + dx[i];
+				int ny = node.y + dy[i];
+
+				if (nx >= 0 && ny >= 0 && nx < n && ny < n && !visited[nx][ny] && arr[nx][ny] != 1) {
+					visited[nx][ny] = true;
+					if (arr[nx][ny] == 2) {
+						queue.add(new Node(nx, ny, node.time + 1,true));
+					}
+					else {
+						queue.add(new Node(nx, ny, node.time + 1,false));
+					}
+				}
+			}
+		}
+
+		// 빈 공간을 모두 채웠는지 확인
+		if (spacesToFill == 0) {
+			minTime = Math.min(minTime, maxTime);
+		}
+		
+		//System.out.println("maxTime: "+ maxTime+", inTime: "+minTime);
+	}
+
+	static class Hospital {
+		int x, y;
+
+		public Hospital(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+	static class Node {
+		int x, y, time;
+		boolean isHospital;
+
+		public Node(int x, int y, int time, boolean isHospital) {
+			this.x = x;
+			this.y = y;
+			this.time = time;
+			this.isHospital = isHospital;
+		}
+	}
 }
