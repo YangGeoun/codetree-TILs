@@ -47,16 +47,16 @@ public class Main {
     // 40000번 8x8 에서 BFS 단 이미 구한 최소보다 커지면 탐색 중단(백트랙킹)
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] splitedInput = br.readLine().split(" ");
-        n = Integer.parseInt(splitedInput[0]);
-        m = Integer.parseInt(splitedInput[1]);
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
         firePositionList = new ArrayList<>();
         matrix = new int[n][m]; 
         int answer = 0;
         for (int i = 0; i < n; i++) {
-            splitedInput = br.readLine().split(" ");
+            st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
-                int tmp = Integer.parseInt(splitedInput[j]);
+                int tmp = Integer.parseInt(st.nextToken());
                 matrix[i][j] = tmp;
                 if (tmp == 2) firePositionList.add(new Position(i, j));
                 if (tmp == 0) answer++;
