@@ -43,6 +43,7 @@ public class Main {
         int count = 0;
         int maxVisited = 1;
         while (!q.isEmpty()) {
+            if (count >= cnt) break;
             Position now = q.poll();
             for (int d = 0; d < 4; d++) {
                 int newR = now.r + dr[d];
@@ -53,9 +54,7 @@ public class Main {
                         int nextVisited = visited[now.r][now.c] + 1;
                         visited[newR][newC] = nextVisited;
                         maxVisited = nextVisited;
-                        if (matrix[newR][newC] == 0){
-                            count++;
-                        }
+                        if (matrix[newR][newC] == 0) count++;
                     }
                 }
             }
