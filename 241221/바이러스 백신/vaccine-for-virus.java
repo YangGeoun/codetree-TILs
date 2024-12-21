@@ -48,12 +48,14 @@ public class Main {
                 int newR = now.r + dr[d];
                 int newC = now.c + dc[d];
                 if(0 <= newR && newR < n && 0 <= newC && newC < n) {
-                    if (matrix[newR][newC] == 0 && visited[newR][newC] == 0) {
+                    if (matrix[newR][newC] != 1 && visited[newR][newC] == 0) {
                         q.add(new Position(newR, newC));
                         int nextVisited = visited[now.r][now.c] + 1;
                         visited[newR][newC] = nextVisited;
                         maxVisited = nextVisited;
-                        count++;
+                        if (matrix[newR][newC] == 0){
+                            count++;
+                        }
                     }
                 }
             }
