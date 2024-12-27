@@ -1,93 +1,137 @@
-import java.io.*;
 import java.util.*;
-import java.util.stream.*;
+import java.io.*;
 
 public class Main {
-    static int d = 4, r = 0, n, m, max = 0;
-    static Chess[] chessArr = new Chess[8];
-    static int[] dr = {-1, 0, 1, 0};
-    static int[] dc = {0, 1, 0, -1};
-    static int[][] matrix;
-    static Map<Integer, List<Position>[]> positionMap = new HashMap<>();
+    //상우하좌
+    static boolean canGo[][][] = {
+        {},
+        {
+            {true,false,false,false},
+            {false,true,false,false},
+            {false,false,true,false},
+            {false,false,false,true}
+        },
+        {
+            {true,false,true,false},
+            {false,true,false,true}
+        },
+        {
+            {true,true,false,false},
+            {false,true,true,false},
+            {false,false,true,true},
+            {true,false,false,true}
+        },
+        {
+            {true,true,false,true},
+            {true,true,true,false},
+            {false,true,true,true},
+            {true,false,true,true}
+        },
+        {
+            {true,true,true,true}
+        }
+    };
+    static class Pos{
+        int type;
+        int x;
+        int y;
+        public Pos(int x, int y,int type){
+            this.x = x;
+            this.y = y;
+            this.type = type;
+        }
+        public int HashCode(){
+            return Objects.hash(type,x,y);
+        }
+        public boolean equals(Object o){
+            Pos p = (Pos) o;
+            if(p.x == this.x && p.y == this.y && p.type == this.type){
+                return true;
+            }
+            return false;
+        }
+    }
+    static ArrayList<Pos> list;
+    static int[][] map;
+    static int[][] origin;
+    static int[] dx = {-1,0,1,0};
+    static int[] dy = {0,1,0,-1};
+    static boolean[][] visited;
+    static int ans = Integer.MAX_VALUE;
+    static int N,M;
+    public static void main(String[] args) throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        N = n;
+        M = m;
+        map = new int[n][m];
+        origin = new int[n][m];
+        visited = new boolean[n][m];
+        list = new ArrayList<Pos>();
 
-    record Position(int r, int c) {}
-    record Chess(int r, int c, int kind) {}
+        int size = n*m;
+        for(int i=0; i<n; i++){
+            st = new StringTokenizer(br.readLine());
+            for(int j=0; j<m; j++){
+                map[i][j] = origin[i][j] = Integer.parseInt(st.nextToken());
+                if(map[i][j] > 0 && map[i][j] < 6){
+                    list.add(new Pos(i,j,map[i][j]));
+                    size--;
+                }else if(map[i][j] == 6){
+                    size--;
+                }
+            }
+        }
+        dfs(0,map,size);
+        System.out.println(ans);
+    }
 
-    public static void generatePermutations(List<Integer> current) {
-        if (current.size() == r) {
-            max = Math.max(max, check(current));
+    public static void dfs(int dep,int[][] map, int size){
+        if(dep == list.size()){
+            ans = Math.min(ans, size);
             return;
         }
-        for (int i = 0; i < d; i++) {
-            List<Integer> next = new ArrayList<>(current);
-            next.add(i);
-            generatePermutations(next);
+        
+        Pos p = list.get(dep);
+        int[][] map2 = new int[N][M];
+        for(int i=0; i<N; i++){
+            map2[i] = map[i].clone();
+        }
+
+        for(int i=0; i<canGo[p.type].length; i++){
+            int count = go(p,i,map2);
+            dfs(dep+1,map2,size-count);
+            for(int j=0; j<N; j++){
+                map2[j] = map[j].clone();
+            }
         }
     }
 
-    static void fillHashMap() {
-        for (int i = 0; i < r; i++) {
-            Chess chess = chessArr[i];
-            List<Position>[] tmp = new ArrayList[4];
-            for (int j = 0; j < 4; j++) {
-                tmp[j] = new ArrayList<>();
-            }
-            
-            for (int j = 0; j < 4; j++) {
-                int directions = chess.kind == 5 ? 4 : (chess.kind == 2 ? 2 : 1);
-                for (int k = 0; k < directions; k++) {
-                    int dir = chess.kind == 2 ? (j / 2) * 2 + k : (j + k) % 4;
-                    int newR = chess.r + dr[dir];
-                    int newC = chess.c + dc[dir];
-                    while ((0 <= newR && newR < n && 0 <= newC && newC < m) && matrix[newR][newC] != 6) {
-                        if (matrix[newR][newC] == 0) {
-                            tmp[j].add(new Position(newR, newC));
-                        }
-                        newR += dr[dir];
-                        newC += dc[dir];
+    public static int go(Pos p,int i,int[][] map2){
+        int count = 0;
+        for(int d=0; d<4; d++){
+            if(canGo[p.type][i][d]){
+                int x = p.x;
+                int y = p.y;
+
+                int nx = x;
+                int ny = y;
+                while(true){
+                    nx += dx[d];
+                    ny += dy[d];
+                    if(nx<0||ny<0||nx>=N||ny>=M||map2[nx][ny] == 6){
+                        nx -= dx[d];
+                        ny -= dy[d];
+                        break;
+                    }else if(map2[nx][ny] == 0){
+                        map2[nx][ny] = p.type;
+                        count++;
                     }
                 }
-                if (chess.kind == 2) {
-                    tmp[j + 2] = tmp[j];
-                    j++;
-                } else if (chess.kind == 5) {
-                    tmp[1] = tmp[2] = tmp[3] = tmp[0];
-                    break;
-                }
-            }
-            positionMap.put(i, tmp);
-        }
-    }
-
-    static int check(List<Integer> directionList) {
-        return (int) IntStream.range(0, r)
-            .flatMap(i -> positionMap.get(i)[directionList.get(i)].stream()
-                .mapToInt(p -> p.r * m + p.c))
-            .distinct()
-            .count();
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String[] splitedInput = br.readLine().split(" ");
-        n = Integer.parseInt(splitedInput[0]);
-        m = Integer.parseInt(splitedInput[1]);
-        matrix = new int[n][m];
-        int answer = 0;
-        for (int i = 0; i < n; i++) {
-            splitedInput = br.readLine().split(" ");
-            for (int j = 0; j < m; j++) {
-                int tmp = Integer.parseInt(splitedInput[j]);
-                matrix[i][j] = tmp;
-                if (0 < tmp && tmp < 6) {
-                    chessArr[r++] = new Chess(i, j, tmp);
-                } 
-                else if (tmp == 0) answer++;
             }
         }
-        
-        fillHashMap();
-        generatePermutations(new ArrayList<>());
-        System.out.println(answer - max);
+        return count;
     }
 }
