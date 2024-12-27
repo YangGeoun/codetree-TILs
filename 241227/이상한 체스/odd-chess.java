@@ -92,8 +92,8 @@ public class Main {
                                 if (matrix[newR][newC] == 0) {
                                     tmp2.add(new Position(newR, newC));
                                 }
-                                newR += dr[j];
-                                newC += dc[j];
+                                newR += dr[j + (2 * k)];
+                                newC += dc[j + (2 * k)];
                             }
                         }
                         tmp[j] = tmp2;
@@ -111,8 +111,8 @@ public class Main {
                                 if (matrix[newR][newC] == 0) {
                                     tmp2.add(new Position(newR, newC));
                                 }
-                                newR += dr[j];
-                                newC += dc[j];
+                                newR += dr[(j + k) % 4];
+                                newC += dc[(j + k) % 4];
                             }
                         }
                         tmp[j] = tmp2;
@@ -129,8 +129,8 @@ public class Main {
                                 if (matrix[newR][newC] == 0) {
                                     tmp2.add(new Position(newR, newC));
                                 }
-                                newR += dr[j];
-                                newC += dc[j];
+                                newR += dr[(j + k) % 4];
+                                newC += dc[(j + k) % 4];
                             }
                         }
                         tmp[j] = tmp2;
