@@ -87,7 +87,7 @@ public class Main {
             int row = 0, col = 0, maxV = 0;
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
-                    if (maxV < sumMap[i][j]){
+                    if (maxV <= sumMap[i][j]){
                         maxV = sumMap[i][j];
                         row = i;
                         col = j;
