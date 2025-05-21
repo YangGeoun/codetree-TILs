@@ -20,7 +20,7 @@ public class Main {
             for(int j = 0; j < n; j++){
                 int num = Integer.parseInt(splitedStr[j]);
                 if (num > 0) map[i][j] = num;
-                else if (num == -1) map[i][j] = -2000;
+                else if (num == -1) map[i][j] = -4000;
             }
         }
         for (int y = 0; y < m; y++){
@@ -101,7 +101,7 @@ public class Main {
                     int newR = row + a * dr[d];
                     int newC = col + a * dc[d];
                     if (!(0 <= newR && newR < n && 0 <= newC && newC < n)) break;
-                    if (map[newR][newC] == 0){
+                    if (map[newR][newC] < 1 && map[newR][newC] > -2500){
                         map[newR][newC] = -c - 1;
                         break;
                     }
