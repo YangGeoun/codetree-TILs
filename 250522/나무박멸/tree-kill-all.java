@@ -94,14 +94,14 @@ public class Main {
                     }
                 }
             }
-            map[row][col] = -m - 1;
+            map[row][col] = -c - 1;
             answer += maxV;
             for(int d = 4; d < 8; d++) {
                 for (int a = 1; a <= k; a++) {
                     int newR = row + a * dr[d];
                     int newC = col + a * dc[d];
                     if (!(0 <= newR && newR < n && 0 <= newC && newC < n && map[newR][newC] >= 0)) break;
-                    map[newR][newC] = -m - 1;
+                    map[newR][newC] = -c - 1;
                 }
             }
             for(int i = 0; i < n; i++){
