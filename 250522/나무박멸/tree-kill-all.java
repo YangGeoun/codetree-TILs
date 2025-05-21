@@ -87,7 +87,7 @@ public class Main {
             int row = 0, col = 0, maxV = 0;
             for(int i = 0; i < n; i++){
                 for(int j = 0; j < n; j++){
-                    if (maxV <= sumMap[i][j]){
+                    if (maxV < sumMap[i][j]){
                         maxV = sumMap[i][j];
                         row = i;
                         col = j;
@@ -100,8 +100,15 @@ public class Main {
                 for (int a = 1; a <= k; a++) {
                     int newR = row + a * dr[d];
                     int newC = col + a * dc[d];
-                    if (!(0 <= newR && newR < n && 0 <= newC && newC < n && map[newR][newC] >= 0)) break;
-                    map[newR][newC] = -c - 1;
+                    if (!(0 <= newR && newR < n && 0 <= newC && newC < n)) break;
+                    if (map[newR][newC] == 0){
+                        map[newR][newC] = -c - 1;
+                        break;
+                    }
+                    else if(map[newR][newC] > 0){
+                        map[newR][newC] = -c - 1;
+                    }
+                    else break;
                 }
             }
             for(int i = 0; i < n; i++){
